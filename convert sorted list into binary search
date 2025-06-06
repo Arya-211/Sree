@@ -1,0 +1,72 @@
+public class Main {
+    // Definition for singly-linked list.
+    public static class ListNode {
+        int val;
+        ListNode next;
+        ListNode() {}
+        ListNode(int val) { this.val = val; }
+        ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+    }
+
+    // Definition for a binary tree node.
+    public static class TreeNode {
+        int val;
+        TreeNode left;
+        TreeNode right;
+        TreeNode() {}
+        TreeNode(int val) { this.val = val; }
+        TreeNode(int val, TreeNode left, TreeNode right) {
+            this.val = val;
+            this.left = left;
+            this.right = right;
+        }
+    }
+
+    public static class Solution {
+        public TreeNode sortedListToBST(ListNode head) {
+            if (head == null) return null;
+            if (head.next == null) return new TreeNode(head.val);
+            
+            ListNode slow = head;
+            ListNode fast = head.next.next;
+            while (fast != null && fast.next != null) {
+                slow = slow.next;
+                fast = fast.next.next;
+            }
+            
+            TreeNode res = new TreeNode(slow.next.val);
+            ListNode righthalf = slow.next.next;
+            slow.next = null;
+            res.left = sortedListToBST(head);
+            res.right = sortedListToBST(righthalf);
+            return res; 
+        }
+    }
+
+    public static void main(String[] args) {
+        // Create a sorted linked list: 1 -> 2 -> 3 -> 4 -> 5
+        ListNode head = new ListNode(1);
+        head.next = new ListNode(2);
+        head.next.next = new ListNode(3);
+        head.next.next.next = new ListNode(4);
+        head.next.next.next.next = new ListNode(5);
+
+        // Convert the sorted linked list to a binary search tree
+        Solution solution = new Solution();
+        TreeNode bstRoot = solution.sortedListToBST(head);
+
+        // Print the BST including null values
+        printTree(bstRoot);
+    }
+
+    // Helper method to print the tree including null values
+    public static void printTree(TreeNode node) {
+        if (node == null) {
+            System.out.print("null ");
+            return;
+        }
+        System.out.print(node.val + " ");
+        printTree(node.left);
+        printTree(node.right);
+    }
+}
