@@ -1,0 +1,57 @@
+public class Main {
+    
+    static class TreeNode {
+        int val; TreeNode left, right;
+        TreeNode(int v){ val = v; }
+    }
+    
+    java.util.List<TreeNode> nodes = new java.util.ArrayList<>();
+    
+    public TreeNode balanceBST(TreeNode root) {
+        inorder(root);
+        return build(0, nodes.size()-1);
+    }
+    
+    void inorder(TreeNode root){
+        if(root == null) return;
+        inorder(root.left);
+        nodes.add(root);
+        inorder(root.right);
+    }
+    
+    TreeNode build(int s, int e){
+        if(s > e) return null;
+        int m = (s + e) / 2;
+        TreeNode root = nodes.get(m);
+        root.left = build(s, m-1);
+        root.right = build(m+1, e);
+        return root;
+    }
+    
+    void printBFS(TreeNode root){
+        java.util.Queue<TreeNode> q = new java.util.LinkedList<>();
+        q.add(root);
+        while(!q.isEmpty()){
+            TreeNode cur = q.poll();
+            if(cur == null){
+                System.out.print("null ");
+                continue;
+            }
+            System.out.print(cur.val + " ");
+            q.add(cur.left);
+            q.add(cur.right);
+        }
+    }
+    
+    public static void main(String[] args) {
+        Main sol = new Main();
+        TreeNode root = new TreeNode(3);
+        root.left = new TreeNode(1);
+        root.left.right = new TreeNode(2);
+        root.right = new TreeNode(4);
+        
+        TreeNode balanced = sol.balanceBST(root);
+        sol.printBFS(balanced);
+    }
+}
+
