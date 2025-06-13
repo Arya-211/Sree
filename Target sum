@@ -1,0 +1,32 @@
+import java.util.Arrays;
+
+public class Main {
+    public static void main(String[] args) {
+        int[] nums = {1, 1, 1, 1, 1};
+        int target = 3;
+        Solution solution = new Solution();
+        int result = solution.findTargetSumWays(nums, target);
+        System.out.println("Number of ways to reach target 3: " + result);
+    }
+}
+
+class Solution {
+    public int findTargetSumWays(int[] nums, int target) {
+        int totalSum = Arrays.stream(nums).sum();
+        if (totalSum < Math.abs(target) || (totalSum + target) % 2 != 0) {
+            return 0;
+        }
+        int subsetSum = (totalSum + target) / 2;
+        return countSubsetSumWays(nums, subsetSum);
+    }
+    private int countSubsetSumWays(int[] nums, int subsetSum) {
+        int[] dp = new int[subsetSum + 1];
+        dp[0] = 1;
+        for (int num : nums) {
+            for (int sum = subsetSum; sum >= num; sum--) {
+                dp[sum] += dp[sum - num];
+            }
+        }
+        return dp[subsetSum];
+    }
+}
